@@ -5,7 +5,7 @@ import { MoonIcon, SunIcon, Maximize2Icon, Minimize2Icon } from "lucide-react";
 
 export default function Home() {
   const [jsonInput, setJsonInput] = useState<string>("");
-  const [parsedJson, setParsedJson] = useState<any | null>(null);
+  const [parsedJson, setParsedJson] = useState<unknown | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [fullHeight, setFullHeight] = useState<boolean>(false);
@@ -40,7 +40,7 @@ export default function Home() {
       const parsed = JSON.parse(jsonInput);
       setParsedJson(parsed);
       setError(null);
-    } catch (err) {
+    } catch (_error) {
       setError("Invalid JSON");
       setParsedJson(null);
     }

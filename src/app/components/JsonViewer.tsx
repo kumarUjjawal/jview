@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface JsonViewerProps {
-  data: any;
+  data: unknown;
   darkMode?: boolean;
 }
 
@@ -16,7 +16,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, darkMode = false }) => {
 };
 
 interface JsonNodeProps {
-  data: any;
+  data: unknown;
   name: string;
   isExpanded?: boolean;
   level: number;
@@ -33,7 +33,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({
   const [expanded, setExpanded] = useState(isExpanded);
   const isObject = data !== null && typeof data === "object";
   const isArray = Array.isArray(data);
-  const isEmpty = isObject && Object.keys(data).length === 0;
+  const isEmpty = isObject && Object.keys(data as object).length === 0;
 
   const toggleExpand = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -42,7 +42,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({
     }
   };
 
-  const getValueColor = (value: any) => {
+  const getValueColor = (value: unknown) => {
     if (value === null) return darkMode ? "text-gray-400" : "text-gray-500";
     switch (typeof value) {
       case "boolean":
@@ -56,7 +56,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({
     }
   };
 
-  const renderValue = (value: any) => {
+  const renderValue = (value: unknown) => {
     if (value === null) return "null";
     if (typeof value === "string") {
       // For long strings, truncate them in the UI
@@ -105,17 +105,17 @@ const JsonNode: React.FC<JsonNodeProps> = ({
           <span className={keyClass}>{name}</span>:{" "}
           <span className="text-gray-500 dark:text-gray-400 ml-1">
             {isArray ? "Array" : "Object"}
-            {isEmpty ? " (empty)" : expanded ? "" : ` (${Object.keys(data).length} ${isArray ? "items" : "properties"})`}
+            {isEmpty ? " (empty)" : expanded ? "" : ` (${Object.keys(data as object).length} ${isArray ? "items" : "properties"})`}
           </span>
         </div>
       </div>
 
       {expanded && !isEmpty && (
         <div className="ml-2 border-l-2 border-gray-200 dark:border-gray-700 pl-2">
-          {Object.keys(data).map((key) => (
+          {Object.keys(data as object).map((key) => (
             <JsonNode
               key={key}
-              data={data[key]}
+              data={(data as Record<string, unknown>)[key]}
               name={isArray ? `[${key}]` : key}
               level={level + 1}
               darkMode={darkMode}
